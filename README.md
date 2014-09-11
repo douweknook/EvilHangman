@@ -1,7 +1,7 @@
 Evil Hangman
 ===========
 In this folder is my implementation of the Evil Hangman assignment of the App Studio  course of the minor programming at the University of Amsterdam.
-===========
+
 The Evil Hangman application looks like regular hangman, but the app keeps changing the word the user has to guess. The app starts off with a large list of English words. Each time the user enters a letter, the app checks whether there are more words in its list with the letter than without and then whittles the list down to the largest such subset.
 ===========
 General Features:
@@ -30,7 +30,7 @@ Algoritmic Features:
 - When a letter is entered, the app checks for every word whether it contains this letter and on what position in the word. Every position that exists becomes a subset of its own (also for words that contain the same letter twice or more or don't containt the letter). Next the app counts the amount of words in each subset and chooses the largest one.
 - If the size of the largest subsets is equal, the algoritm will pseudorandomly pick one of them. 
 - When the user wins, the algoritm returns that word to be displayed to the user.
-- When the user loses, the algorithm should pick a word from the last subset it used and display that to the user in the 'you lose' screen. 
+- When the user loses, the algorithm should pick a word from the last subset it used and display that to the user in the 'you lose' screen.
 
 
 
