@@ -3,7 +3,7 @@ Evil Hangman
 In this folder is my implementation of the Evil Hangman assignment of the App Studio  course of the minor programming at the University of Amsterdam.
 
 The Evil Hangman application looks like regular hangman, but the app keeps changing the word the user has to guess. The app starts off with a large list of English words. Each time the user enters a letter, the app checks whether there are more words in its list with the letter than without and then whittles the list down to the largest such subset.
-===========
+
 General Features:
 - Upon launch, gameplay starts. If the app was backgrounded, gameplay resumes.
 - The application is based upon the Utility Application template.
