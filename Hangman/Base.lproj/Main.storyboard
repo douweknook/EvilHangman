@@ -20,7 +20,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="HANGMAN" id="EGR-m3-OZD">
+                                    <navigationItem title="Hangman" id="EGR-m3-OZD">
                                         <barButtonItem key="leftBarButtonItem" title="New Game" id="mbe-s8-5HY">
                                             <connections>
                                                 <action selector="newGame:" destination="rQl-PL-IFJ" id="MRx-ww-9Lh"/>
@@ -42,17 +42,29 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MG5-ua-JPM">
-                                <rect key="frame" x="112" y="339" width="97" height="30"/>
+                                <rect key="frame" x="112" y="297" width="97" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="2lW-AK-FlJ">
+                                <rect key="frame" x="20" y="183" width="285" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ACd-Bl-rqr">
+                                <rect key="frame" x="20" y="114" width="280" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.91697095790000005" green="0.91697095790000005" blue="0.91697095790000005" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="guessedLettersLabel" destination="ACd-Bl-rqr" id="fD3-0B-05h"/>
+                        <outlet property="guessesLeft" destination="2lW-AK-FlJ" id="7zw-HA-X5S"/>
                         <outlet property="inputTextField" destination="MG5-ua-JPM" id="MIR-As-I45"/>
-                        <outlet property="placeholder" destination="udP-jy-999" id="e3n-H4-LJU"/>
+                        <outlet property="placeholderLabel" destination="udP-jy-999" id="vrZ-jZ-aJV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h4L-l5-tyG" sceneMemberID="firstResponder"/>

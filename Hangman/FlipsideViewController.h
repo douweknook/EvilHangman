@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Wordlist.h"
 
 @class FlipsideViewController;
 
@@ -16,6 +17,7 @@
 
 @interface FlipsideViewController : UIViewController
 
+@property (nonatomic, strong) Wordlist *words;
 @property (nonatomic, weak) IBOutlet UISlider *sliderWordLength;
 @property (nonatomic, weak) IBOutlet UILabel *labelWordLength;
 @property (nonatomic, weak) IBOutlet UISlider *sliderGuessAmount;

@@ -10,8 +10,10 @@
 
 @interface MainViewController : UIViewController <FlipsideViewControllerDelegate, UITextFieldDelegate>
 
-@property (nonatomic, weak) IBOutlet UILabel *placeholder;
-@property (weak, nonatomic) IBOutlet UITextField *inputTextField;
+@property (nonatomic, weak) IBOutlet UILabel *placeholderLabel;
+@property (nonatomic, weak) IBOutlet UITextField *inputTextField;
+@property (nonatomic, weak) IBOutlet UILabel *guessedLettersLabel;
+@property (strong, nonatomic) IBOutlet UIProgressView *guessesLeft;
 
 - (IBAction)newGame:(id)sender;
 

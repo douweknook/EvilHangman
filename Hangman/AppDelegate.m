@@ -12,6 +12,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Set default settings for wordLength and guessesAmount
+    NSString *wordLengthValue = @"4";
+    NSString *guessAmountValue = @"10";
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{wordLengthValue:@"wordLengthSetting", guessAmountValue:@"guessAmountSetting"}];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     // Override point for customization after application launch.
     return YES;
 }
