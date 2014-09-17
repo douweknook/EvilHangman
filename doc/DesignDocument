@@ -1,0 +1,7 @@
+Design Document
+================
+This document contains the technical design for the Evil Hangman application.
+
+Classes and Public Methods:
+================
+<code>MainViewController</code> class contains the gameplay view
