@@ -4,4 +4,5 @@ This document contains the technical design for the Evil Hangman application.
 
 Classes and Public Methods:
 ================
-<code>MainViewController</code> class contains the gameplay view
+MainViewController - contains the methods of the gameplay view and gameplay elements.
+----------------
