@@ -7,7 +7,6 @@
 //
 
 #import "FlipsideViewController.h"
-#import "Wordlist.h"
 
 @interface FlipsideViewController ()
 
@@ -23,14 +22,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"words" ofType:@"plist"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"plist"];
     NSArray *wordList = [[NSMutableArray alloc] initWithContentsOfFile:path];
     
-    //Wordlist *words = [[Wordlist alloc] init];
-    //[words loadWordList];
-    
-    // Find maximum word length in words.plist
-    //NSNumber* maximumLength = [words maximumWordLengthInList:words];
+    // Find maximum and minimum word length in words.plist
     NSNumber *maximumLength = [wordList valueForKeyPath:@"@max.length"];
     NSNumber *minimumLength = [wordList valueForKeyPath:@"@min.length"];
     
@@ -59,7 +54,6 @@
 
 - (IBAction)done:(id)sender {
     [self.delegate flipsideViewControllerDidFinish:self];
-    
     //Save settings for New Game
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:_labelWordLength.text forKey:@"wordLengthSetting"];

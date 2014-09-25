@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		B1830D9D19C6F3FE00B93594 /* test.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1830D9C19C6F3FE00B93594 /* test.plist */; };
 		B1830D9E19C6F3FE00B93594 /* test.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1830D9C19C6F3FE00B93594 /* test.plist */; };
-		B1830DA619C88DB200B93594 /* Wordlist.m in Sources */ = {isa = PBXBuildFile; fileRef = B1830DA519C88DB200B93594 /* Wordlist.m */; };
-		B1830DA719C88DB200B93594 /* Wordlist.m in Sources */ = {isa = PBXBuildFile; fileRef = B1830DA519C88DB200B93594 /* Wordlist.m */; };
 		B18B876E19C04C3D003D4693 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18B876D19C04C3D003D4693 /* Foundation.framework */; };
 		B18B877019C04C3D003D4693 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18B876F19C04C3D003D4693 /* CoreGraphics.framework */; };
 		B18B877219C04C3D003D4693 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18B877119C04C3D003D4693 /* UIKit.framework */; };
@@ -42,8 +40,6 @@
 
 /* Begin PBXFileReference section */
 		B1830D9C19C6F3FE00B93594 /* test.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = test.plist; sourceTree = "<group>"; };
-		B1830DA419C88DB200B93594 /* Wordlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wordlist.h; sourceTree = "<group>"; };
-		B1830DA519C88DB200B93594 /* Wordlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Wordlist.m; sourceTree = "<group>"; };
 		B18B876A19C04C3D003D4693 /* Hangman.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hangman.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B18B876D19C04C3D003D4693 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B18B876F19C04C3D003D4693 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -132,8 +128,6 @@
 				B18B878319C04C3D003D4693 /* MainViewController.m */,
 				B18B878519C04C3D003D4693 /* FlipsideViewController.h */,
 				B18B878619C04C3D003D4693 /* FlipsideViewController.m */,
-				B1830DA419C88DB200B93594 /* Wordlist.h */,
-				B1830DA519C88DB200B93594 /* Wordlist.m */,
 				B18B878819C04C3D003D4693 /* Images.xcassets */,
 				B18B877419C04C3D003D4693 /* Supporting Files */,
 			);
@@ -271,7 +265,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1830DA619C88DB200B93594 /* Wordlist.m in Sources */,
 				B18B877E19C04C3D003D4693 /* AppDelegate.m in Sources */,
 				B18B878419C04C3D003D4693 /* MainViewController.m in Sources */,
 				B18B878719C04C3D003D4693 /* FlipsideViewController.m in Sources */,
@@ -284,7 +277,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B18B879C19C04C3D003D4693 /* HangmanTests.m in Sources */,
-				B1830DA719C88DB200B93594 /* Wordlist.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
