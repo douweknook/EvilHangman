@@ -12,6 +12,7 @@
 
 @property (nonatomic, readwrite, strong) NSMutableArray *words;
 @property (nonatomic, readwrite, strong) NSMutableArray *guessedLetters;
+@property (nonatomic, readwrite, strong) NSMutableArray *lettersGuessed;
 
 @end
 
@@ -21,6 +22,7 @@
 
 @synthesize words=_words;
 @synthesize guessedLetters=_guessedLetters;
+@synthesize lettersGuessed=_lettersGuessed;
 
 @synthesize placeholderLabel=_placeholderLabel;
 @synthesize inputTextField=_inputTextField;
@@ -42,11 +44,22 @@
     _placeholderLabel.text = placeholders;
     
     // Fill label with guessed letters to all letter 'unguessed'
-    _guessedLettersLabel.text = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    _guessedLetters = [[NSMutableArray alloc] init]; // Initialize array to keep track of guessed letters
+    _guessedLetters = [[NSMutableArray alloc] init];
+    
+    _lettersGuessed = [[NSMutableArray alloc] init];
+    
+    NSArray *alphabet = [[NSArray alloc] initWithObjects:@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil];
+    for (NSString *character in alphabet) {
+        NSMutableDictionary *letter = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                                       character, @"letter",
+                                       [UIColor blackColor], @"color",
+                                       [NSNumber numberWithBool:NO], @"guessed", nil];
+        [_guessedLetters addObject:letter];
+    }
+    _guessedLettersLabel.text = [alphabet componentsJoinedByString:@" "];
     
     //Initialize bar with guesses-left to 100%
-    _guessesLeft.progress = 1.0;
+    _guessesLeft.progress = 1.f;
     
 }
 
@@ -92,43 +105,15 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)inputTextField {
-    if ([_inputTextField.text length] > 0 && [_inputTextField.text length] < 2) {
+    if ([_inputTextField.text length] == 1) {
         [self narrowDownToWordLength];
         [self equivalenceClasses];
-        
-        // Update guesses letters label
-        NSString *input = [_inputTextField.text uppercaseString];
-        
-        /*
-         Dit werkt nog niet volledig. De grijze letter wordt weer zwart bij invoer volgende letter.
-         Misschien NSdictionary creeren met alle letters + key voor hun kleur value.
-         Als key = grijs, maak letter grijs.
-         */
-        
-        [_guessedLetters addObject:input];
-        NSLog(@"%@", _guessedLetters);
-        NSString *labelLetters = _guessedLettersLabel.text;
-        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:labelLetters];
-        for (int i = 0; i < [labelLetters length]; i++) {
-            for (NSString *letter in _guessedLetters) {
-                NSLog(@"HIER1");
-                if ([labelLetters characterAtIndex:i] == [letter characterAtIndex:0]) {
-                    NSLog(@"HIER2");
-                    [attributedText setAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:201/255.0 green:201/255.0 blue:201/255.0 alpha:1]}
-                                            range:[labelLetters rangeOfString:input]];
-                }
-            }
-        }
-        _guessedLettersLabel.attributedText = attributedText;
-        
-        //TODO: send returnvalue to algorithm.
+        [self updateGuessedLettersLabel];
+        [self updateGuessedLeft];
         //TODO: clear textfield
-        
         return YES;
     }
-    else {
-        return NO;
-    }
+    return NO;
 }
 
 #pragma mark - Flipside View
@@ -230,6 +215,41 @@
         // keep index sets in one array (each indexset is a equivalance class)
         // check amount of indexes in each indexsets, pick largest
         // select words at indexset, delete all others
+}
+
+- (void)updateGuessedLettersLabel {
+    // Update guessed letters label (Te ingewikkeld. Moet simpeler kunnen, Array of guessed letters ipv dictionaries etc.)
+    NSString *input = [_inputTextField.text uppercaseString];
+    NSString *labelText = _guessedLettersLabel.text;
+    NSDictionary *labelTextAttributes = @{NSForegroundColorAttributeName: _guessedLettersLabel.textColor,
+                                          };
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:labelText
+                                                                                       attributes: labelTextAttributes];
+    for (NSMutableDictionary *letter in _guessedLetters) {
+        if ([[letter valueForKey:@"letter"] isEqualToString:input]) {
+            // Update letter's data
+            [letter setValue:[UIColor grayColor] forKey:@"color"];
+            [letter setValue:[NSNumber numberWithBool:YES] forKey:@"guessed"];
+        }
+        // Update UI
+        UIColor *letterColor = [letter valueForKey:@"color"];
+        NSRange letterTextRange = [labelText rangeOfString:[letter valueForKey:@"letter"]];
+        [attributedText setAttributes:@{NSForegroundColorAttributeName:letterColor}
+                                range:letterTextRange];
+    }
+    _guessedLettersLabel.attributedText = attributedText;
+}
+
+- (void)updateGuessedLeft {
+    // Update guesses left bar. Only do this if letter is wrong!!
+    float amountOfGuesses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"] floatValue];
+    float guessesLeft = _guessesLeft.progress * 100;
+    float downPerGuess = 100 / amountOfGuesses;
+    guessesLeft = (guessesLeft - downPerGuess) / 100;
+    [_guessesLeft setProgress:guessesLeft animated:YES];
+    if (guessesLeft <= 0.f) {
+        NSLog(@"YOU LOSE!");    // Call function to show YOU LOSE screen.
+    }
 }
 
 @end
