@@ -59,6 +59,7 @@
     [defaults setObject:_labelWordLength.text forKey:@"wordLengthSetting"];
     [defaults setObject:_labelGuessAmount.text forKey:@"guessAmountSetting"];
     [defaults synchronize];
+    
     NSLog(@"Data saved");
 }
 

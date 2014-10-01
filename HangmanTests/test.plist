@@ -13,5 +13,58 @@
 	<string>WOW</string>
 	<string>WORD</string>
 	<string>NOW</string>
+	<string>TEST</string>
+	<string>HELLO</string>
+	<string>FILE</string>
+	<string>FOUND</string>
+	<string>NOES</string>
+	<string>LOST</string>
+	<string>PICK</string>
+	<string>CHOSE</string>
+	<string>CLAY</string>
+	<string>LIME</string>
+	<string>OWL</string>
+	<string>JAM</string>
+	<string>PAD</string>
+	<string>BOOK</string>
+	<string>NOTE</string>
+	<string>RULES</string>
+	<string>WITH</string>
+	<string>PAPER</string>
+	<string>RED</string>
+	<string>GREEN</string>
+	<string>BLUE</string>
+	<string>HOLE</string>
+	<string>RING</string>
+	<string>KEY</string>
+	<string>LIGHT</string>
+	<string>WIRE</string>
+	<string>WHITE</string>
+	<string>BLACK</string>
+	<string>BROWN</string>
+	<string>JOB</string>
+	<string>WORK</string>
+	<string>COW</string>
+	<string>DUCK</string>
+	<string>SHEEP</string>
+	<string>CHEAP</string>
+	<string>LEAP</string>
+	<string>TREE</string>
+	<string>DEEP</string>
+	<string>GIRL</string>
+	<string>BOY</string>
+	<string>MAN</string>
+	<string>MEN</string>
+	<string>WOMAN</string>
+	<string>WOMEN</string>
+	<string>GOAL</string>
+	<string>FIELD</string>
+	<string>GREY</string>
+	<string>TABLE</string>
+	<string>CHAIR</string>
+	<string>OAK</string>
+	<string>ROOM</string>
+	<string>BAR</string>
+	<string>COUCH</string>
 </array>
 </plist>

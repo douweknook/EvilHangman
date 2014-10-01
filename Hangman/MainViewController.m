@@ -7,12 +7,12 @@
 //
 
 #import "MainViewController.h"
+#include <stdlib.h>
 
 @interface MainViewController ()
 
 @property (nonatomic, readwrite, strong) NSMutableArray *words;
 @property (nonatomic, readwrite, strong) NSMutableArray *guessedLetters;
-@property (nonatomic, readwrite, strong) NSMutableArray *lettersGuessed;
 
 @end
 
@@ -22,32 +22,48 @@
 
 @synthesize words=_words;
 @synthesize guessedLetters=_guessedLetters;
-@synthesize lettersGuessed=_lettersGuessed;
 
 @synthesize placeholderLabel=_placeholderLabel;
 @synthesize inputTextField=_inputTextField;
 @synthesize guessedLettersLabel=_guessedLettersLabel;
 @synthesize guessesLeft=_guessesLeft;
+@synthesize labelGuessesLeft=_labelGuessesLeft;
+@synthesize explainLabel=_explainLabel;
 
+static bool correct;
+static bool win;
+static bool lose;
+NSNumber *wordLength;
+NSNumber *amountOfGuesses;
 
 #pragma  mark - viewDidLoad
 
-- (void)setup {
-    _inputTextField.delegate = self;    // Set delegate to self
-    _inputTextField.autocorrectionType = UITextAutocorrectionTypeNo;    // Turn autocorrect off
-    //_inputTextField.hidden = YES; // Hide textfield
-    [_inputTextField becomeFirstResponder]; // Set textfield to firstresponder to show keyboard
+- (void)setup
+{
+    wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
+    amountOfGuesses = [[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"];
+    _inputTextField.delegate = self;
+    _inputTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    _inputTextField.hidden = YES;
+    [_inputTextField becomeFirstResponder];
+    
+    win = NO;
+    lose = NO;
+    
+    _explainLabel.text = @"Enter a letter and press return to start playing";
+    _explainLabel.textColor = [UIColor blackColor];
+    _explainLabel.font = [UIFont systemFontOfSize:15];
+    self.view.tintColor = [UIColor colorWithRed:0.0f
+                                          green:122.0f/255.0f
+                                           blue:1.0f
+                                          alpha:1.0f];
     
     // Initialize label (placeholder) with hyphens (length as saved in NSUserDefaults)
-    NSNumber *hyphens = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
-    NSString *placeholders = [@"-" stringByPaddingToLength:[hyphens integerValue] withString:@"-" startingAtIndex:0];
+    NSString *placeholders = [@"-" stringByPaddingToLength:[wordLength integerValue] withString:@"-" startingAtIndex:0];
     _placeholderLabel.text = placeholders;
     
-    // Fill label with guessed letters to all letter 'unguessed'
+    // Fill label with guessed letters to all letters 'unguessed'
     _guessedLetters = [[NSMutableArray alloc] init];
-    
-    _lettersGuessed = [[NSMutableArray alloc] init];
-    
     NSArray *alphabet = [[NSArray alloc] initWithObjects:@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil];
     for (NSString *character in alphabet) {
         NSMutableDictionary *letter = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
@@ -59,11 +75,12 @@
     _guessedLettersLabel.text = [alphabet componentsJoinedByString:@" "];
     
     //Initialize bar with guesses-left to 100%
-    _guessesLeft.progress = 1.f;
-    
+    _labelGuessesLeft.text = [NSString stringWithFormat:@"Guesses Left: %@", amountOfGuesses];
+    _guessesLeft.progress = 1.0f;
 }
 
--(void)initializeData {
+-(void)initializeData
+{
     NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"plist"];
     _words = [[NSMutableArray alloc] initWithContentsOfFile:path];
 }
@@ -73,6 +90,7 @@
     [super viewDidLoad];
     [self setup];
     [self initializeData];
+        NSLog(@"wordLength: %@, amountOfGuesses: %@", wordLength, amountOfGuesses);
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -84,14 +102,16 @@
 
 #pragma mark - New Game button
 
-- (IBAction)newGame:(id)sender {
+- (IBAction)newGame:(id)sender
+{
     [self setup];
     [self initializeData];
 }
 
 #pragma mark - Textfield
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     // Limit useable character set to alfabetic characters only
     if (textField == _inputTextField) {
         NSCharacterSet *invalidCharSet = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"] invertedSet];
@@ -104,15 +124,43 @@
     
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)inputTextField {
+- (BOOL)textFieldShouldReturn:(UITextField *)inputTextField
+{
+    // Check if input is 1 character en character not entered before.
+    NSString *input = [_inputTextField.text uppercaseString];
     if ([_inputTextField.text length] == 1) {
-        [self narrowDownToWordLength];
-        [self equivalenceClasses];
-        [self updateGuessedLettersLabel];
-        [self updateGuessedLeft];
-        //TODO: clear textfield
-        return YES;
+        for (NSDictionary *letter in _guessedLetters) {
+            if ([[letter valueForKey:@"letter"] isEqualToString:input]) {
+                if ([[letter valueForKey:@"guessed"] isEqualToValue:[NSNumber numberWithBool:YES]]) {
+                    _explainLabel.text = @"You cannot enter the same letter twice!\n Try again.";
+                    _inputTextField.text = @"";
+                    return NO;
+                }
+                else {
+                    [self narrowDownToWordLength];
+                    [self equivalenceClasses];
+                    [self updateGuessedLettersLabel];
+                    _inputTextField.text = @"";
+                    if (correct == YES) {
+                        _explainLabel.text = @"Correct! Enter another letter.";
+                        [self checkForWin];
+                        if (win == YES) {
+                            [self showWinScreen];
+                        }
+                    }
+                    else {
+                        _explainLabel.text = @"Wrong! Try again.";
+                        if (lose == YES) {
+                            [self showLoseScreen];
+                        }
+                    }
+                    return YES;
+                }
+            }
+        }
     }
+    _explainLabel.text = @"You cannot input more than one letter per turn!\n Try again.";
+    _inputTextField.text = @"";
     return NO;
 }
 
@@ -121,6 +169,14 @@
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"win: %@", (win) ? @"YES" : @"NO");
+    NSLog(@"lose: %@", (lose) ? @"YES" : @"NO");
+    if ((win == YES || lose == YES)) {
+        [_inputTextField resignFirstResponder];
+    }
+    else {
+        [_inputTextField becomeFirstResponder];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -134,7 +190,7 @@
 
 - (void)narrowDownToWordLength {
     // Delete all words longer & shorter than set length from array
-    NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
+    //NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
     [_words enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSString *word, NSUInteger index, BOOL *stop) {
         if ([word length] != [wordLength integerValue]) {
             [_words removeObjectAtIndex:index];
@@ -143,82 +199,73 @@
 }
 
 - (void)equivalenceClasses {
-    //Create all possible equivalence classes
-    NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"]; // Get wordlength from saved settings
+    // Set variables needed later
+    //NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"]; // Get wordlength from saved settings
     NSString *input = [_inputTextField.text uppercaseString];    // Set input letter to uppercase unichar for matching
-    
     NSMutableArray *indexSets = [[NSMutableArray alloc] init];
-    
     NSMutableString *placeholders = [_placeholderLabel.text mutableCopy];
     
-    /* Create indexSet of filled-in letterlocations to see if location is still available
-    NSMutableIndexSet *filledLocations = [[NSMutableIndexSet alloc] init];
-    for (int h = 0; h < placeholders.length; h++) {
-        if ([placeholders characterAtIndex:h] != '-') {
-            [filledLocations addIndex:h];
-        }
-    }*/
-    
-    for (NSString *word in _words) {    // Go over each word in the wordlist
+    // Go over every word and create indexSet of letter appearences in word
+    for (NSString *word in _words) {
         NSLog(@"%@", word);
-        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init]; // Allocate and initialize new indexset
-        for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {  // Go over each letter in the word
-            unichar character = [word characterAtIndex:letter]; // Set current letter in word to a unichar for matching
-            if (character == [input characterAtIndex:0]) {   // Check if letter is equal to input
-                [indexSet addIndex: letter];    // Add the index of the matching letter to the indexset
+        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+        for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {
+            unichar character = [word characterAtIndex:letter];
+            if (character == [input characterAtIndex:0]) {
+                [indexSet addIndex: letter];
             }
         }
-        //NSLog(@"%@", indexSet);
-        [indexSets addObject:indexSet]; // Add indexset to array of indexsets
+        // Add indexSets to array of indexSets.
+        [indexSets addObject:indexSet];
     }
     
-    // Find most occurring sets in array of sets
-    NSCountedSet *sets = [NSCountedSet setWithArray:indexSets]; // Convert array of indices to countedSet
-    NSMutableArray *occurrences = [NSMutableArray array];   // Create array to keep track of occurences of particular indexSet
-    for (NSIndexSet *set in sets) {     // Loop over all indexsets and count how many each occurs
+    // Find most occurring set in array of sets (most occuring position of letter)
+    NSCountedSet *sets = [NSCountedSet setWithArray:indexSets];
+    NSMutableArray *occurrences = [NSMutableArray array];
+    for (NSIndexSet *set in sets) {
         NSDictionary *setsDictionary = @{@"set":set, @"count":@([sets countForObject:set])};
         [occurrences addObject:setsDictionary];
     }
-    NSArray *sortedIndexCount = [occurrences sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"count" ascending:NO]]];   // Sort the index counts in descending order (highest at index 0)
+    // Sort unique indexes by occurence, first index is most occuring.
+    NSArray *sortedIndexCount = [occurrences sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"count" ascending:NO]]];
     
-    NSIndexSet *locations = [sortedIndexCount[0] valueForKey:@"set"];   // Put indexes back in NSIndexSet object.
+    NSIndexSet *locations = [sortedIndexCount[0] valueForKey:@"set"];
     
-    // If largest indexSet contains indexes, add letter to view
+    // If largest indexSet contains any indexes, add a letter to the view
     if ([[sortedIndexCount[0] valueForKey:@"set"] count] != 0 ) {
-        NSLog(@"bevat index, letter toevoegen, woorden zonder deze index verwijderen");
-        // Update placeholders label
         for (int j = 0; j < [wordLength integerValue]; j++) {
-            if ([locations containsIndex:j]) {      // If location exists in indexSet, replace character at this locaton with input
+            if ([locations containsIndex:j]) {
                 NSRange range = NSMakeRange(j, 1);
                 [placeholders replaceCharactersInRange:range withString:input];
+                correct = YES;
             }
         }
     }
-    _placeholderLabel.text = placeholders;  // Update label in view
+    else {
+        [self updateGuessesLeft];
+        correct = NO;
+    }
+    // Update label in view
+    _placeholderLabel.text = placeholders;
     
-    NSMutableArray *wordsCopy = [_words copy];  // Create copy of words array to enable deleting objects during enumeration
-    for (NSString *word in wordsCopy) {    // Go over each word in the wordlist
-        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init]; // Allocate and initialize new indexset
-        for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {  // Go over each letter in the word
-            unichar character = [word characterAtIndex:letter]; // Set current letter in word to a unichar for matching
-            if (character == [input characterAtIndex:0]) {   // Check if letter is equal to input
-                [indexSet addIndex: letter];    // Add the index of the matching letter to the indexset
+    // Remove all impossible words from wordlist for efficiency.
+    NSMutableArray *wordsCopy = [_words copy];
+    for (NSString *word in wordsCopy) {
+        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+        for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {
+            unichar character = [word characterAtIndex:letter];
+            if (character == [input characterAtIndex:0]) {
+                [indexSet addIndex: letter];
             }
         }
         if ([indexSet isEqualToIndexSet:locations] == NO) {
             [_words removeObject:word];
         }
     }
-
-        // check if letter is at this index of word (done)
-        // if yes: add index to indexset (done)
-        // keep index sets in one array (each indexset is a equivalance class)
-        // check amount of indexes in each indexsets, pick largest
-        // select words at indexset, delete all others
 }
 
 - (void)updateGuessedLettersLabel {
-    // Update guessed letters label (Te ingewikkeld. Moet simpeler kunnen, Array of guessed letters ipv dictionaries etc.)
+    // Go over the letters of the alphabet (stored in _guessedLetters) and change colors to grey when a letter is guessed
     NSString *input = [_inputTextField.text uppercaseString];
     NSString *labelText = _guessedLettersLabel.text;
     NSDictionary *labelTextAttributes = @{NSForegroundColorAttributeName: _guessedLettersLabel.textColor,
@@ -240,16 +287,62 @@
     _guessedLettersLabel.attributedText = attributedText;
 }
 
-- (void)updateGuessedLeft {
-    // Update guesses left bar. Only do this if letter is wrong!!
-    float amountOfGuesses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"] floatValue];
-    float guessesLeft = _guessesLeft.progress * 100;
-    float downPerGuess = 100 / amountOfGuesses;
-    guessesLeft = (guessesLeft - downPerGuess) / 100;
-    [_guessesLeft setProgress:guessesLeft animated:YES];
-    if (guessesLeft <= 0.f) {
-        NSLog(@"YOU LOSE!");    // Call function to show YOU LOSE screen.
+- (void)updateGuessesLeft {
+    // Update guesses left bar. Only do this if letter is wrong!
+    //int amountOfGuesses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"] intValue];
+    
+    // Retreive number of guesses left from labelGuessesLeft
+    NSString *labelTextGuessesLeft = _labelGuessesLeft.text;
+    NSMutableCharacterSet *nonNumberCharacterSet = [NSMutableCharacterSet decimalDigitCharacterSet];
+    [nonNumberCharacterSet invert];
+    NSString *filtered = [[labelTextGuessesLeft componentsSeparatedByCharactersInSet:nonNumberCharacterSet] componentsJoinedByString:@""];
+    
+    int amountOfGuessesLeft = [filtered intValue] - 1;
+    int guessesLeft = _guessesLeft.progress * 100;
+    int downPerGuess = 100 / [amountOfGuesses intValue];
+    guessesLeft = (guessesLeft - downPerGuess);
+    
+    // Update both Progressview and Label
+    [_guessesLeft setProgress:((float)guessesLeft / 100) animated:YES];
+    _labelGuessesLeft.text = [NSString stringWithFormat:@"Guesses Left: %d", amountOfGuessesLeft];
+    
+    // If user is out of guesses, game lost
+    if (guessesLeft < downPerGuess) {
+        [_guessesLeft setProgress:0.0f animated:YES];
+        lose = YES;
     }
+}
+
+- (void)checkForWin {
+    NSString *placeholder = _placeholderLabel.text;
+    if ([placeholder rangeOfString:@"-" ].location == NSNotFound) {
+        win = YES;
+    }
+}
+
+- (void)showWinScreen {
+    _explainLabel.text = @"Congratulations, you win!";
+    _explainLabel.font = [UIFont systemFontOfSize:20];
+    UIColor *winGreen = [UIColor colorWithRed:0.0f
+                                        green:180.0f/255.0f
+                                         blue:0.0f
+                                        alpha:1.0f];
+    _explainLabel.textColor = winGreen;
+    self.view.tintColor = winGreen;
+    [_inputTextField resignFirstResponder];
+}
+
+- (void)showLoseScreen {
+    _explainLabel.text = @"Oh no, you lost!\n The word was:";
+    _explainLabel.font = [UIFont systemFontOfSize:20];
+    _explainLabel.textColor = [UIColor redColor];
+    self.view.tintColor = [UIColor redColor];
+    
+    // Pick random word from words left in wordlist
+    int lastIndex = [_words count] - 1;
+    int randomNumber = arc4random_uniform(lastIndex);
+    _placeholderLabel.text = [_words objectAtIndex:randomNumber];
+    [_inputTextField resignFirstResponder];
 }
 
 @end

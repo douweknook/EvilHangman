@@ -14,7 +14,10 @@
 @property (nonatomic, weak) IBOutlet UITextField *inputTextField;
 @property (nonatomic, weak) IBOutlet UILabel *guessedLettersLabel;
 @property (strong, nonatomic) IBOutlet UIProgressView *guessesLeft;
+@property (nonatomic, weak) IBOutlet UILabel *labelGuessesLeft;
+@property (weak, nonatomic) IBOutlet UILabel *explainLabel;
 
 - (IBAction)newGame:(id)sender;
+
 
 @end
