@@ -12,7 +12,8 @@ The <code>Wordlist</code> class contains the list of available words. It has sev
 
 Sketches:
 ================
-The sketches of the design can be found in the doc/ respository.
+Below are sketches to give an impression of what the application looks like and how it works.
+![alt tag](https://github.com/douweknook/EvilHangman/blob/master/doc/EvilHangmanDesign.jpg)
 
 Frameworks:
 ================
