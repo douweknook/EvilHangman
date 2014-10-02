@@ -29,6 +29,8 @@
 @synthesize guessesLeft=_guessesLeft;
 @synthesize labelGuessesLeft=_labelGuessesLeft;
 @synthesize explainLabel=_explainLabel;
+//@synthesize restart=_restart;
+//@synthesize settings=_settings;
 
 static bool correct;
 static bool win;
@@ -159,7 +161,7 @@ NSNumber *amountOfGuesses;
             }
         }
     }
-    _explainLabel.text = @"You cannot input more than one letter per turn!\n Try again.";
+    _explainLabel.text = @"You cannot enter more than one letter per turn!\n Try again.";
     _inputTextField.text = @"";
     return NO;
 }
@@ -169,8 +171,6 @@ NSNumber *amountOfGuesses;
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-    NSLog(@"win: %@", (win) ? @"YES" : @"NO");
-    NSLog(@"lose: %@", (lose) ? @"YES" : @"NO");
     if ((win == YES || lose == YES)) {
         [_inputTextField resignFirstResponder];
     }
@@ -207,7 +207,7 @@ NSNumber *amountOfGuesses;
     
     // Go over every word and create indexSet of letter appearences in word
     for (NSString *word in _words) {
-        NSLog(@"%@", word);
+        //NSLog(@"%@", word);
         NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
         for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {
             unichar character = [word characterAtIndex:letter];

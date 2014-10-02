@@ -16,6 +16,8 @@
 @property (strong, nonatomic) IBOutlet UIProgressView *guessesLeft;
 @property (nonatomic, weak) IBOutlet UILabel *labelGuessesLeft;
 @property (weak, nonatomic) IBOutlet UILabel *explainLabel;
+//@property (weak, nonatomic) IBOutlet UIBarButtonItem *restart;
+//@property (weak, nonatomic) IBOutlet UIBarButtonItem *settings;
 
 - (IBAction)newGame:(id)sender;
 
