@@ -13,6 +13,7 @@ The <code>Wordlist</code> class contains the list of available words. It has sev
 Sketches:
 ================
 Below are sketches to give an impression of what the application looks like and how it works.
+
 ![alt tag](https://github.com/douweknook/EvilHangman/blob/master/doc/EvilHangmanDesign.jpg)
 
 Frameworks:
