@@ -6,9 +6,9 @@ In this folder is my implementation of the Evil Hangman assignment of the App St
 Features:
 ===========
 The Evil Hangman application looks like regular hangman, but the app cheats by continuously changing the word the user has to guess. The app starts off with a large list of English words. Each time the user enters a letter, the app checks whether there are more words in its list with this letter (and at which location in the word) than without and then whittles the list down to the largest such subset.
-Other options include for the user to change the word length and amount of guesses used in the game. The app uses a word list of over 140.000 English words.
+Other options include for the user to change the word length and amount of guesses used in the game.
 
-Views*
+Views
 ===========
 The application is devided in several views. Upon luanch the gameplay starts so the user is presented with the 'game view'. This consists of a keyboard for user input, a set of placeholders for the letters to be guessed and some additional data such as letters already guessed and guesses left. Atop the screen is a navigation var which offers two options: new game and settings. The new game button resets the game play view and updates it with the current settings.
 
@@ -16,7 +16,11 @@ The settings screen consists of two sliders. The first one lets the user change 
 
 When the game is finished one of two screens is shown. (1) The user has won (guessed the word) and is presented with a screen displaying a congratulaions message. (2) The user has lost (has run our of guesses) and is presented with a screen displaying the word and a textual message that he/she has lost.
 
-*The wireframes for the views are in the doc/ directory.
+Wireframes:
+===========
+These wireframes represent the different views of the application.
+
+![alt tag](https://github.com/douweknook/EvilHangman/blob/master/doc/EvilHangmanWireframes.jpg)
 
 Design:
 ===========
