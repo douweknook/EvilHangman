@@ -36,18 +36,15 @@
     // Set slider values to previously selected settings
     NSString *wordLengthValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
     NSString *guessAmountValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"];
-    NSLog(@"Word Length: %@\n Guess amount: %@", wordLengthValue, guessAmountValue);
     _labelWordLength.text = wordLengthValue;
     _labelGuessAmount.text = guessAmountValue;
     _sliderWordLength.value = [wordLengthValue floatValue];
     _sliderGuessAmount.value = [guessAmountValue floatValue];
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Actions
@@ -59,8 +56,6 @@
     [defaults setObject:_labelWordLength.text forKey:@"wordLengthSetting"];
     [defaults setObject:_labelGuessAmount.text forKey:@"guessAmountSetting"];
     [defaults synchronize];
-    
-    NSLog(@"Data saved");
 }
 
 // Actions to change label when slider changes

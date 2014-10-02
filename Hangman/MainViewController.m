@@ -29,8 +29,6 @@
 @synthesize guessesLeft=_guessesLeft;
 @synthesize labelGuessesLeft=_labelGuessesLeft;
 @synthesize explainLabel=_explainLabel;
-//@synthesize restart=_restart;
-//@synthesize settings=_settings;
 
 static bool correct;
 static bool win;
@@ -93,13 +91,11 @@ NSNumber *amountOfGuesses;
     [self setup];
     [self initializeData];
         NSLog(@"wordLength: %@, amountOfGuesses: %@", wordLength, amountOfGuesses);
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - New Game button
@@ -190,7 +186,6 @@ NSNumber *amountOfGuesses;
 
 - (void)narrowDownToWordLength {
     // Delete all words longer & shorter than set length from array
-    //NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"];
     [_words enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSString *word, NSUInteger index, BOOL *stop) {
         if ([word length] != [wordLength integerValue]) {
             [_words removeObjectAtIndex:index];
@@ -200,14 +195,12 @@ NSNumber *amountOfGuesses;
 
 - (void)equivalenceClasses {
     // Set variables needed later
-    //NSNumber *wordLength = [[NSUserDefaults standardUserDefaults] objectForKey:@"wordLengthSetting"]; // Get wordlength from saved settings
-    NSString *input = [_inputTextField.text uppercaseString];    // Set input letter to uppercase unichar for matching
+    NSString *input = [_inputTextField.text uppercaseString];
     NSMutableArray *indexSets = [[NSMutableArray alloc] init];
     NSMutableString *placeholders = [_placeholderLabel.text mutableCopy];
     
     // Go over every word and create indexSet of letter appearences in word
     for (NSString *word in _words) {
-        //NSLog(@"%@", word);
         NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
         for (NSInteger letter = 0; letter < [wordLength integerValue]; letter++) {
             unichar character = [word characterAtIndex:letter];
@@ -288,9 +281,6 @@ NSNumber *amountOfGuesses;
 }
 
 - (void)updateGuessesLeft {
-    // Update guesses left bar. Only do this if letter is wrong!
-    //int amountOfGuesses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"guessAmountSetting"] intValue];
-    
     // Retreive number of guesses left from labelGuessesLeft
     NSString *labelTextGuessesLeft = _labelGuessesLeft.text;
     NSMutableCharacterSet *nonNumberCharacterSet = [NSMutableCharacterSet decimalDigitCharacterSet];

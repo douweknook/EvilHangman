@@ -1,10 +1,9 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
-      "filename" : "icon_18125.png",
-      "unassigned" : true,
-      "scale" : "1x"
+      "idiom" : "universal",
+      "scale" : "1x",
+      "filename" : "Settings.png"
     }
   ],
   "info" : {

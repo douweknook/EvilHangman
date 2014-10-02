@@ -14,7 +14,7 @@
 {
     // Set default settings for wordLength and guessesAmount
     NSString *wordLengthValue = @"4";
-    NSString *guessAmountValue = @"10";
+    NSString *guessAmountValue = @"12";
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{wordLengthValue:@"wordLengthSetting", guessAmountValue:@"guessAmountSetting"}];
     [[NSUserDefaults standardUserDefaults] synchronize];
     // Override point for customization after application launch.
